@@ -1,0 +1,2 @@
+cout.precision(6);
+cout.setf( std::ios::fixed, std::ios::floatfield ); 

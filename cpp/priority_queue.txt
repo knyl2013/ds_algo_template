@@ -1,0 +1,14 @@
+struct cmp
+{
+    // is smaller
+    bool operator()(const int& lhs, const int& rhs)
+    {
+        return lhs < rhs;
+    }
+};
+
+priority_queue<int,vector<int>, cmp > pq;
+priority_queue<int, vector<int>, greater<int> > my_min_heap;
+priority_queue<int> max_heap;
+pq.push(x);  pq.top(); pq.pop();
+// greater pops first by default
