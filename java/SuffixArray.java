@@ -1,124 +1,134 @@
-// Java program for building suffix array of a given text
-import java.util.*;
-class SuffixArray
-{
-    // Class to store information of a suffix
-    public static class Suffix implements Comparable<Suffix>
-    {
-        int index;
-        int rank;
-        int next;
- 
-        public Suffix(int ind, int r, int nr)
-        {
-            index = ind;
-            rank = r;
-            next = nr;
-        }
-         
-        // A comparison function used by sort()
-        // to compare two suffixes.
-        // Compares two pairs, returns 1
-        // if first pair is smaller
-        public int compareTo(Suffix s)
-        {
-            if (rank != s.rank) return Integer.compare(rank, s.rank);
-            return Integer.compare(next, s.next);
-        }
-    }
-     
-    // This is the main function that takes a string 'txt'
-    // of size n as an argument, builds and return the
-    // suffix array for the given string
-    public static int[] suffixArray(String s)
-    {
-        int n = s.length();
-        Suffix[] su = new Suffix[n];
-         
-        // Store suffixes and their indexes in
-        // an array of classes. The class is needed
-        // to sort the suffixes alphabatically and
-        // maintain their old indexes while sorting
-        for (int i = 0; i < n; i++)
-        {
-            su[i] = new Suffix(i, s.charAt(i) - '$', 0);
-        }
-        for (int i = 0; i < n; i++)
-            su[i].next = (i + 1 < n ? su[i + 1].rank : -1);
- 
-        // Sort the suffixes using the comparison function
-        // defined above.
-        Arrays.sort(su);
- 
-        // At this point, all suffixes are sorted
-        // according to first 2 characters.
-        // Let us sort suffixes according to first 4
-        // characters, then first 8 and so on
-        int[] ind = new int[n];
-         
-        // This array is needed to get the index in suffixes[]
-        // from original index. This mapping is needed to get
-        // next suffix.
-        for (int length = 4; length < 2 * n; length <<= 1)
-        {
-             
-            // Assigning rank and index values to first suffix
-            int rank = 0, prev = su[0].rank;
-            su[0].rank = rank;
-            ind[su[0].index] = 0;
-            for (int i = 1; i < n; i++)
-            {
-                // If first rank and next ranks are same as
-                // that of previous suffix in array,
-                // assign the same new rank to this suffix
-                if (su[i].rank == prev &&
-                    su[i].next == su[i - 1].next)
-                {
-                    prev = su[i].rank;
-                    su[i].rank = rank;
-                }
-                else
-                {
-                    // Otherwise increment rank and assign
-                    prev = su[i].rank;
-                    su[i].rank = ++rank;
-                }
-                ind[su[i].index] = i;
-            }
-             
-            // Assign next rank to every suffix
-            for (int i = 0; i < n; i++)
-            {
-                int nextP = su[i].index + length / 2;
-                su[i].next = nextP < n ?
-                   su[ind[nextP]].rank : -1;
-            }
-             
-            // Sort the suffixes according
-            // to first k characters
-            Arrays.sort(su);
-        }
- 
-        // Store indexes of all sorted
-        // suffixes in the suffix array
-        int[] suf = new int[n];
-         
-        for (int i = 0; i < n; i++)
-            suf[i] = su[i].index;
- 
-        // Return the suffix array
-        return suf;
-    }   
+ import java.util.*;
 
-    // Driver Code
-    public static void main(String[] args)
-    {
-        String txt = "banana";
-        int n = txt.length();
-        int[] suff_arr = suffixArray(txt);
-        System.out.println("Following is suffix array for banana:");
-        System.out.println(Arrays.toString(suff_arr));
+static class SuffixArray {
+
+  // sort suffixes of S in O(n*log(n))
+  public static int[] suffixArray(CharSequence S) {
+    int n = S.length();
+    Integer[] order = new Integer[n];
+    for (int i = 0; i < n; i++)
+      order[i] = n - 1 - i;
+
+    // stable sort of characters
+    Arrays.sort(order, (a, b) -> Character.compare(S.charAt(a), S.charAt(b)));
+
+    int[] sa = new int[n];
+    int[] classes = new int[n];
+    for (int i = 0; i < n; i++) {
+      sa[i] = order[i];
+      classes[i] = S.charAt(i);
     }
+    // sa[i] - suffix on i'th position after sorting by first len characters
+    // classes[i] - equivalence class of the i'th suffix after sorting by first len characters
+
+    for (int len = 1; len < n; len *= 2) {
+      int[] c = classes.clone();
+      for (int i = 0; i < n; i++) {
+        // condition sa[i - 1] + len < n simulates 0-symbol at the end of the string
+        // a separate class is created for each suffix followed by simulated 0-symbol
+        classes[sa[i]] = i > 0 && c[sa[i - 1]] == c[sa[i]] && sa[i - 1] + len < n && c[sa[i - 1] + len / 2] == c[sa[i] + len / 2] ? classes[sa[i - 1]] : i;
+      }
+      // Suffixes are already sorted by first len characters
+      // Now sort suffixes by first len * 2 characters
+      int[] cnt = new int[n];
+      for (int i = 0; i < n; i++)
+        cnt[i] = i;
+      int[] s = sa.clone();
+      for (int i = 0; i < n; i++) {
+        // s[i] - order of suffixes sorted by first len characters
+        // (s[i] - len) - order of suffixes sorted only by second len characters
+        int s1 = s[i] - len;
+        // sort only suffixes of length > len, others are already sorted
+        if (s1 >= 0)
+          sa[cnt[classes[s1]]++] = s1;
+      }
+    }
+    return sa;
+  }
+
+  // sort rotations of S in O(n*log(n))
+  public static int[] rotationArray(CharSequence S) {
+    int n = S.length();
+    Integer[] order = new Integer[n];
+    for (int i = 0; i < n; i++)
+      order[i] = i;
+    Arrays.sort(order, (a, b) -> Character.compare(S.charAt(a), S.charAt(b)));
+    int[] sa = new int[n];
+    int[] classes = new int[n];
+    for (int i = 0; i < n; i++) {
+      sa[i] = order[i];
+      classes[i] = S.charAt(i);
+    }
+    for (int len = 1; len < n; len *= 2) {
+      int[] c = classes.clone();
+      for (int i = 0; i < n; i++)
+        classes[sa[i]] = i > 0 && c[sa[i - 1]] == c[sa[i]] && c[(sa[i - 1] + len / 2) % n] == c[(sa[i] + len / 2) % n] ? classes[sa[i - 1]] : i;
+      int[] cnt = new int[n];
+      for (int i = 0; i < n; i++)
+        cnt[i] = i;
+      int[] s = sa.clone();
+      for (int i = 0; i < n; i++) {
+        int s1 = (s[i] - len + n) % n;
+        sa[cnt[classes[s1]]++] = s1;
+      }
+    }
+    return sa;
+  }
+
+  // longest common prefixes array in O(n)
+  public static int[] lcp(int[] sa, CharSequence s) {
+    int n = sa.length;
+    int[] rank = new int[n];
+    for (int i = 0; i < n; i++)
+      rank[sa[i]] = i;
+    int[] lcp = new int[n - 1];
+    for (int i = 0, h = 0; i < n; i++) {
+      if (rank[i] < n - 1) {
+        for (int j = sa[rank[i] + 1]; Math.max(i, j) + h < s.length() && s.charAt(i + h) == s.charAt(j + h); ++h)
+          ;
+        lcp[rank[i]] = h;
+        if (h > 0)
+          --h;
+      }
+    }
+    return lcp;
+  }
+  // public static void main(String[] args) {
+  //    String s = "alabala";
+  //    int[] suf = suffixArray(s);
+  //    System.out.println(Arrays.toString(suf));
+  // }
+  // Usage example
+  // public static void main(String[] args) {
+  //   String s1 = "abcab";
+  //   int[] sa1 = suffixArray(s1);
+
+  //   // print suffixes in lexicographic order
+  //   for (int p : sa1)
+  //     System.out.println(s1.substring(p));
+
+  //   System.out.println("lcp = " + Arrays.toString(lcp(sa1, s1)));
+
+  //   // random test
+  //   Random rnd = new Random(1);
+  //   for (int step = 0; step < 100000; step++) {
+  //     int n = rnd.nextInt(100) + 1;
+  //     StringBuilder s = new StringBuilder();
+  //     for (int i = 0; i < n; i++)
+  //       s.append((char) ('\1' + rnd.nextInt(10)));
+  //     int[] sa = suffixArray(s);
+  //     int[] ra = rotationArray(s.toString() + '\0');
+  //     int[] lcp = lcp(sa, s);
+  //     for (int i = 0; i + 1 < n; i++) {
+  //       String a = s.substring(sa[i]);
+  //       String b = s.substring(sa[i + 1]);
+  //       if (a.compareTo(b) >= 0
+  //           || !a.substring(0, lcp[i]).equals(b.substring(0, lcp[i]))
+  //           || (a + " ").charAt(lcp[i]) == (b + " ").charAt(lcp[i])
+  //           || sa[i] != ra[i + 1])
+  //         throw new RuntimeException();
+  //     }
+  //   }
+  //   System.out.println("Test passed");
+  // }
 }
- 
-// This code is contributed by AmanKumarSingh
