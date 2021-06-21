@@ -21,6 +21,7 @@ public class A {
     static PrintWriter out;
     static String INPUT = "";
     static String taskName = null;
+    static boolean logTime = !true;
     
     public static void main(String[] args) throws Exception
     {
@@ -161,7 +162,7 @@ public class A {
         }
     }
     
-    private static void tr(Object... o) { if(INPUT.length() != 0)System.out.println(Arrays.deepToString(o)); }
+    private static void tr(Object... o) { if(logTime)System.out.println(Arrays.deepToString(o)); }
 }
 
 
