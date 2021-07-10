@@ -2,14 +2,26 @@ import java.io.*;
 import java.util.*;
 
 public class A {
+    static void input()
+    {
+
+    }
+
     static void solve()
     {
-        for (int T = ni(); T >= 1; T--) {
-            long x = nl();
-            // (L-Math.abs(s2-s1)/Math.sqrt(2)*t)^2=X
-            double t = Math.max(0, (L-Math.sqrt(x))*Math.sqrt(2))/Math.abs(s1-s2);
-            out.printf("%.12f\n", t);
-        }
+
+    }
+    
+    static void output()
+    {
+
+    }
+
+    static void myMain()
+    {
+        input();
+        solve();
+        output();
     }
 
 
@@ -36,7 +48,7 @@ public class A {
             out = new PrintWriter(System.out);
         }
         
-        solve();
+        myMain();
         out.flush();
         long G = System.currentTimeMillis();
         tr(G-S+"ms");
