@@ -2,29 +2,11 @@ import java.io.*;
 import java.util.*;
 
 public class A {
-    static void input()
-    {
-
-    }
-
     static void solve()
     {
 
     }
     
-    static void output()
-    {
-
-    }
-
-    static void myMain()
-    {
-        input();
-        solve();
-        output();
-    }
-
-
 
 
 
@@ -48,7 +30,7 @@ public class A {
             out = new PrintWriter(System.out);
         }
         
-        myMain();
+        solve();
         out.flush();
         long G = System.currentTimeMillis();
         tr(G-S+"ms");
