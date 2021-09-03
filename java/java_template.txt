@@ -5,7 +5,7 @@ public class A {
     static void myMain() {
         int T = ni();
         for (int t = 1; t <= T; t++) {
-            out.printf("Case %d: ", t);
+            out.printf("Case #%d: ", t);
         }
     }
 
