@@ -3,7 +3,10 @@ import java.util.*;
 
 public class A {
     static void myMain() {
-        
+        int T = ni();
+        for (int t = 1; t <= T; t++) {
+            out.printf("Case %d: ", i);
+        }
     }
 
     /*I/O Template*/
