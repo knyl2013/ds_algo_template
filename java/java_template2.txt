@@ -11,7 +11,7 @@ public class Solution implements Runnable {
     }
 
 
-
+    // I/O Template
     static InputStream is;
     static PrintWriter out;
     static String INPUT = "";
