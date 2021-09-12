@@ -24,6 +24,19 @@ char nc() {
     cin >> c;
     return c;
 }
+template <typename T>
+std::ostream & operator << (std::ostream & os, const std::vector<T>& vec) {
+    for(auto elem : vec)
+        os << elem << " ";
+    return os;
+}
+template <typename T>
+std::ostream & operator << (std::ostream & os, const std::vector<vector<T>>& mat) {
+    cout << "\n";
+    for(auto elem : mat)
+        os<<elem<<"\n";
+    return os;
+}
 // ====================== Code Template: End ======================
 
 
@@ -32,6 +45,7 @@ int main() {
     cin.tie(NULL);
     int T = ni();
     for (int t = 1; t <= T; t++) {
-        cout << "Case #" <<  t << ": ";
+        int ans = 1;
+        cout << "Case #" << t << ": " << ans << "\n";
     }
 }
