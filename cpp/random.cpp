@@ -35,23 +35,31 @@ void testcase() {
     auto rand_int = [](int min, int max) {
         return rand() % (max - min + 1) + min;
     };
-    auto random_vec = [](int n, int min, int max) {
-        vector<int> ans(n);
-        for (int i = 0; i < n; ++i)
-            ans[i] = rand() % (max - min + 1) + min;
-        return ans;
+    auto random_vec = [](int n, int min, int max) { 
+        vector<int> ans(n); 
+        for (int i = 0; i < n; ++i) ans[i] = rand() % (max - min + 1) + min; 
+        return ans; 
     };
     auto random_mat = [](int h, int w, int min, int max) {
         vector<vector<int>> mat(h, vector<int>(w));
-        for (int i = 0; i < h; ++i) {
-            for (int j = 0; j < w; ++j) {
-                mat[i][j] = rand() % (max - min + 1) + min;
-            }
-        }
+        for (int i = 0; i < h; ++i) for (int j = 0; j < w; ++j) mat[i][j] = rand() % (max - min + 1) + min;
         return mat;
     };
+    while (true) {
+        auto N = rand_int(1, 3);
+        auto v = vector<int>(N);
+        auto expect = brute(N), actual = solve(N);
+        watch(expect);
+        watch(actual);
+        watch(N);
+        if (expect != actual) {
+            break;
+        }
+        else {
+            cout << "ok\n";
+        }
+    }
 }
-
 int main() {
     bool debug = true;
     if (debug) {
