@@ -20,7 +20,7 @@ class UnionFind {
     int v_p = this->Find(v);
     if (u_p != v_p) {
       size[u_p] += size[v_p];
-      size[v_p] = 0;
+      size.erase(v_p);
       parent[v_p] = u_p;
     }
   }
