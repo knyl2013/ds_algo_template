@@ -2,16 +2,19 @@
 using namespace std;
 class UnionFind {
  public:
-  map<int, int> parent;
-  map<int, int> size;
+  vector<int> parent;
+  vector<int> size;
 
-  UnionFind() {
-    parent = {};
-    size = {};
+  UnionFind(int n) {
+    parent = vector<int>(n);
+    size = vector<int>(n, 1);
+    for (int i = 0; i < n; ++i) {
+      parent[i] = i;
+    }
   }
 
   int Find(int x) {
-    if (!parent.count(x)) return x;
+    if (x == parent[x]) return x;
     return parent[x] = this->Find(parent[x]);
   }
 
