@@ -14,8 +14,7 @@ int my_pow(int a, int b) {
 int my_inv(int x) { return my_pow(x, mod - 2); }
 vector<long long> fac;
 void calc_fac(int x) {
-  fac.resize(x + 1, 0);
-  fac[0] = 1;
+  fac.resize(x + 1, 1);
   for (int i = 1; i <= x; ++i) {
     fac[i] = mul(fac[i - 1], i);
   }
