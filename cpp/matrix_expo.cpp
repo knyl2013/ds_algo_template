@@ -3,11 +3,10 @@ using namespace std;
 int n, mod = 1e9 + 7;
 int add(int a, int b) { return (a + b >= mod) ? (a + b - mod) : (a + b); }
 int mul(int a, int b) { return (long long)a * b % mod; }
-typedef vector<int> vec;
-typedef vector<vec> matrix;
+typedef vector<vector<int>> matrix;
 matrix mul(const matrix& A, const matrix& B) {
   size_t n = A.size();
-  matrix result(n, vec(n));
+  matrix result(n, vector<int>(n));
   for (size_t i = 0; i < n; ++i) {
     for (size_t j = 0; j < n; ++j) {
       for (size_t k = 0; k < n; ++k) {
