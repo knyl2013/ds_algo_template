@@ -27,7 +27,7 @@ matrix expo(matrix const& M, unsigned n) {
 int main() {
   int n;
   cin >> n;
-  matrix mat = {{0, 1, 1, 1}, {1, 0, 1, 1}, {1, 1, 0, 1}, {1, 1, 1, 0}};
+  matrix mat = {{1, 1}, {1, 0}};
   mat = expo(mat, n);
   cout << mat[0][0];
 }
