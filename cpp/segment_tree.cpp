@@ -22,11 +22,10 @@ class SegTree {
       free(this);
     }
   };
-  vector<long long> inputs;
+  vector<long long> vals;
   Node* root;
-  SegTree(vector<long long>& inp) {
-    inputs = inp;
-    int n = inputs.size();
+  SegTree(int n) {
+    vals = vector<long long>(n);
     root = build_tree(0, n - 1);
   }
   Node* build_tree(int start, int end) {
@@ -34,14 +33,13 @@ class SegTree {
       return NULL;
     }
     if (start == end) {
-      return new Node(start, end, inputs[start], NULL, NULL);
+      return new Node(start, end, vals[start], NULL, NULL);
     }
     int mid = (start + end) / 2;
     Node* left = build_tree(start, mid);
     Node* right = build_tree(mid + 1, end);
     return new Node(start, end, func(left->val, right->val), left, right);
   }
-
   long long range_query(Node* root, int start, int end) {
     if (root->start == start && root->end == end) {
       return root->val;
@@ -76,24 +74,18 @@ class SegTree {
   }
   void update(int index, long long val) { update(root, index, val); }
   void deallocate() { root->deallocate(); }
-  // using GCD as example function
-  long long func(long long smaller, long long bigger) {
-    if (smaller > bigger) return func(bigger, smaller);
-    if (smaller == 0L) return bigger;
-    long remain = bigger % smaller;
-    return func(remain, smaller);
-  }
+  long long func(long long a, long long b) { return max(a, b); }
 };
 
 int main() {
   vector<long long> inputs = {6, 3, 3, 4, 5, 6};
-  SegTree* tree = new SegTree(inputs);
-  cout << tree->range_query(0, 2) << endl;  // expect 3
-  tree->update(0, 9);
-  cout << tree->range_query(0, 2) << endl;  // expect 3
-  tree->update(0, 2);
-  cout << tree->range_query(0, 2) << endl;  // expect 1
-  tree->update(0, 0);
-  cout << tree->range_query(0, 2) << endl;  // expect 3
-  tree->deallocate();
+  int n = inputs.size();
+  SegTree tree(n);
+  for (int i = 0; i < n; ++i) {
+    tree.update(i, inputs[i]);
+  }
+  cout << tree.range_query(0, n - 1) << endl;  // expect 6
+  cout << tree.range_query(1, 4) << endl;      // expect 5
+  tree.update(4, 7);
+  cout << tree.range_query(1, 4) << endl;  // expect 7
 }
