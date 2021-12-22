@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.*;
 
 public class java_template {
-  static void myMain() {
+  static void main2() {
     int T = nextInt();
     for (int t = 1; t <= T; t++) {
       out.printf("Case #%d: ", t);
@@ -26,7 +26,7 @@ public class java_template {
       out = new PrintWriter(System.out);
     }
 
-    myMain();
+    main2();
     out.flush();
     long G = System.currentTimeMillis();
     // watch(G - S + "ms");
