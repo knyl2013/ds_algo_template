@@ -37,6 +37,14 @@ std::ostream & operator << (std::ostream & os, const std::vector<vector<T>>& mat
         os<<elem<<"\n";
     return os;
 }
+template <typename A, typename B>
+std::ostream & operator << (std::ostream & os, const std::map<A, B>& mp) {
+    os << "{\n";
+    for (auto& t : mp)
+        os << t.first << ": "  << t.second << "\n";
+    os << "}";
+    return os;
+}
 // ====================== Code Template: End ======================
 
 
