@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.*;
 
-public class java_tempalte {
+public class java_template {
   void solve() {
 
   }
