@@ -6,7 +6,7 @@ public class java_template {
 
   }
 
-  static boolean multiple = true;
+  static boolean multiple = false;
   static String task = "";
   static Kattio io;
 
