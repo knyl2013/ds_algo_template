@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.*;
 
 public class java_tempalte {
-  static void solve() {
+  void solve() {
 
   }
 
@@ -11,6 +11,7 @@ public class java_tempalte {
   static Kattio io;
 
   public static void main(String[] args) throws IOException {
+    var main = new java_template(); 
     if (!task.isEmpty()) {
       io = new Kattio(task);
     } else {
@@ -21,7 +22,7 @@ public class java_tempalte {
       t = io.nextInt();
     }
     for (int i = 0; i < t; i++) {
-      solve();
+      main.solve();
     }
     io.close();
   }
