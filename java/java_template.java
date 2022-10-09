@@ -1,17 +1,16 @@
 import java.io.*;
 import java.util.*;
 
-public class java_template {
+class java_template {
   void solve() {
 
   }
-
+  /* I/O Template */
   static boolean multiple = false;
   static String task = "";
   static Kattio io;
 
   public static void main(String[] args) throws IOException {
-    var main = new java_template(); 
     if (!task.isEmpty()) {
       io = new Kattio(task);
     } else {
@@ -22,7 +21,7 @@ public class java_template {
       t = io.nextInt();
     }
     for (int i = 0; i < t; i++) {
-      main.solve();
+      new java_template().solve();
     }
     io.close();
   }
