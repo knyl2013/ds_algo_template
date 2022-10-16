@@ -1,7 +1,6 @@
 import subprocess
 from random import randint
 
-compile = not True
 filename1 = "lane.cpp"
 filename2 = "lane.cpp"
 
@@ -33,6 +32,7 @@ def is_equal(out1, out2):
         return False
     return True
 
+compile = True
 def compare(prog1, prog2):
     while True:
         tc = generate_testcase()
@@ -42,6 +42,8 @@ def compare(prog1, prog2):
         print(prog2+": ", out2)
         if not is_equal(out1, out2):
             break
+        global compile
+        compile = False
     
 def run(prog, tc):
     prog_name, _ = prog.split(".")
