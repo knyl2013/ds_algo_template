@@ -1,20 +1,20 @@
 import subprocess
 from random import randint
 
-filename1 = "lane.cpp"
-filename2 = "lane.cpp"
+filename1 = "lane.java"
+filename2 = "lane_sol.cpp"
 
 # Insert your code here: how to generate random test cases
 def generate_testcase():
-    N = randint(2, 10)
-    R = randint(1, 100)
-    cars = [[0, randint(1,R), randint(0,R)]]
-    for i in range(1, N):
-        rep = randint(1, 5)
+    N = randint(2, 100)
+    R = randint(1, 1_000_000)
+    cars = []
+    for i in range(0, N):
+        rep = randint(1 if i == 0 else 0,5)
         start = 0
         for _ in range(rep):
-            car_start = randint(start, R)
-            car_end = randint(car_start, R)
+            car_start = randint(start, R-1)
+            car_end = randint(car_start+1, R)
             cars.append([i, car_end-car_start, car_start])
             start = car_end
             if start == R:
@@ -26,8 +26,14 @@ def generate_testcase():
 
 # Insert your code here: return true if two outputs(out1 and out2) are considered equal
 def is_equal(out1, out2):
+    def is_float(element) -> bool:
+        try:
+            float(element)
+            return True
+        except ValueError:
+            return False
     if out1 != out2:
-        if out1.isnumeric() and out2.isnumeric():
+        if is_float(out1) and is_float(out2):
             return float(out1) == float(out2)
         return False
     return True
@@ -46,10 +52,17 @@ def compare(prog1, prog2):
         compile = False
     
 def run(prog, tc):
-    prog_name, _ = prog.split(".")
+    prog_name, ext = prog.split(".")
+    if ext == "cpp":
+        compile_command = "g++ -std=c++17 {} -o {}".format(prog, prog_name).split()
+        run_command = ["./"+prog_name]
+    elif ext == "java":
+        compile_command = "javac {}".format(prog).split()
+        run_command = ["java",prog_name]
+
     if compile:
-        subprocess.Popen("g++ -std=c++17 {} -o {}".format(prog, prog_name).split()).wait()
-    p = subprocess.Popen(["./"+prog_name], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        subprocess.Popen(compile_command).wait()
+    p = subprocess.Popen(run_command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     output = p.communicate(input=tc.encode())[0]
     return output
 
