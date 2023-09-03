@@ -20,14 +20,14 @@ def inv(x: int) -> int:
     return pow(x, mod - 2)
 
 
-facts = [1] * (nax + 1)
+fac = [1] * (nax + 1)
 for i in range(1, nax):
-    facts[i] = mul(facts[i - 1], i)
+    fac[i] = mul(fac[i - 1], i)
 
 
 def nPr(n: int, r: int) -> int:
-    return mul(facts[n], inv(facts[n - r]))
+    return mul(fac[n], inv(fac[n - r]))
 
 
 def nCr(n: int, r: int) -> int:
-    return mul(nPr(n, r), inv(facts[r]))
+    return mul(nPr(n, r), inv(fac[r]))
