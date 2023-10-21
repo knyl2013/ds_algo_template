@@ -37,6 +37,7 @@ class Graph:
 				w = st.pop()
 				ans[-1].append(w)
 				stackMember[w] = False
+			ans[-1].reverse()
 
 	# The function to do DFS traversal.
 	# It uses recursive SCCUtil()
