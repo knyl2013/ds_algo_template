@@ -1,5 +1,5 @@
 class SegTree: # This code is modified version from: https://www.geeksforgeeks.org/segment-tree-efficient-implementation/
-	def func(self, a: int, b: int) -> int:
+	def reduce(self, a: int, b: int) -> int:
 		return max(a, b) # Change here to be a different seg tree (e.g. max, min, or add)
 	def __init__(self, n: int):
 		self.n = n
@@ -9,7 +9,7 @@ class SegTree: # This code is modified version from: https://www.geeksforgeeks.o
 		index = index + self.n; 
 		i = index; 
 		while i > 1:
-			self.tree[i >> 1] = self.func(self.tree[i], self.tree[i ^ 1]); 
+			self.tree[i >> 1] = self.reduce(self.tree[i], self.tree[i ^ 1]); 
 			i >>= 1; 
 	def query(self, l: int, r: int):
 		res = 0;
@@ -17,11 +17,11 @@ class SegTree: # This code is modified version from: https://www.geeksforgeeks.o
 		r += self.n + 1;
 		while l < r : 
 			if (l & 1) : 
-				res = self.func(res, self.tree[l]); 
+				res = self.reduce(res, self.tree[l]); 
 				l += 1
 			if (r & 1) : 
 				r -= 1; 
-				res = self.func(res, self.tree[r]); 
+				res = self.reduce(res, self.tree[r]); 
 			l >>= 1; 
 			r >>= 1
 		return res; 
