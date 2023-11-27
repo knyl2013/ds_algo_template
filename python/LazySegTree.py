@@ -1,82 +1,54 @@
-class LazySegTree:  # This code is contributed by AnkitRai01
-    def reduce(self, a: int, b: int) -> int:
-        # Change here to be a different segment tree (e.g. max, min, or add)
-        return a + b
+class LazySegTree:
+    def __init__(self, data):
+        self.data = data
+        self.tree = [0] * (4 * len(self.data))
+        self.lazy = [0] * (4 * len(self.data))
+        self._init(1, 0, len(self.data) - 1)
 
-    def __init__(self, n: int):
-        self.n = n
-        self.tree = [0] * (5 * self.n)
-        self.lazy = [0] * (5 * self.n)
+    def _init(self, i, tl, tr):
+        if tl == tr:
+            self.tree[i] = self.data[tl]
+            return self.tree[i]
+        self.tree[i] = self._init(i * 2, tl, (tl + tr) // 2) + self._init(
+            i * 2 + 1, (tl + tr) // 2 + 1, tr
+        )
+        return self.tree[i]
 
-    def updateUtil(self, si, ss, se, us, ue, diff):
-        if self.lazy[si] != 0:
-            self.self.tree[si] += (se - ss + 1) * self.self.lazy[si]
-            if ss != se:
-                self.lazy[si * 2 + 1] += self.lazy[si]
-                self.lazy[si * 2 + 2] += self.lazy[si]
-            self.lazy[si] = 0
-        if ss > se or ss > ue or se < us:
+    def _update(self, i, ql, qr, add, tl, tr):
+        if qr < tl or tr < ql:  # [ql, qr] and [tl, tr] don't intersect.
             return
-        if ss >= us and se <= ue:
-            self.tree[si] += (se - ss + 1) * diff
-            if ss != se:
-                self.lazy[si * 2 + 1] += diff
-                self.lazy[si * 2 + 2] += diff
+        if ql <= tl and tr <= qr:  # [ql, qr] includes [tl, tr].
+            self.lazy[i] += add
             return
-        mid = (ss + se) // 2
-        self.updateUtil(si * 2 + 1, ss, mid, us, ue, diff)
-        self.updateUtil(si * 2 + 2, mid + 1, se, us, ue, diff)
-        self.tree[si] = self.reduce(self.tree[si * 2 + 1], self.tree[si * 2 + 2])
+        self.lazy[i * 2] += self.lazy[i]
+        self.lazy[i * 2 + 1] += self.lazy[i]
+        self.tree[i] += (self.lazy[i] + add) * (min(qr, tr) - max(ql, tl) + 1)
+        self.lazy[i] = 0
+        self._update(i * 2, ql, qr, add, tl, (tl + tr) // 2)
+        self._update(i * 2 + 1, ql, qr, add, (tl + tr) // 2 + 1, tr)
 
-    def update(self, start: int, end: int, diff: int):
-        self.updateUtil(0, 0, self.n - 1, start, end, diff)
-
-    def queryUtil(self, ss, se, qs, qe, si):
-        if self.lazy[si] != 0:
-            self.tree[si] += (se - ss + 1) * self.lazy[si]
-            if ss != se:
-                self.lazy[si * 2 + 1] += self.lazy[si]
-                self.lazy[si * 2 + 2] += self.lazy[si]
-
-            self.lazy[si] = 0
-
-        if ss > se or ss > qe or se < qs:
+    def _query(self, i, ql, qr, tl, tr):
+        if qr < tl or tr < ql:  # [ql, qr] and [tl, tr] don't intersect.
             return 0
-
-        if ss >= qs and se <= qe:
-            return self.tree[si]
-
-        mid = (ss + se) // 2
-        return self.reduce(
-            self.queryUtil(ss, mid, qs, qe, 2 * si + 1),
-            self.queryUtil(mid + 1, se, qs, qe, 2 * si + 2),
+        if ql <= tl and tr <= qr:  # [ql, qr] includes [tl, tr].
+            return self.tree[i] + self.lazy[i] * (tr - tl + 1)
+        self.lazy[i * 2] += self.lazy[i]
+        self.lazy[i * 2 + 1] += self.lazy[i]
+        self.tree[i] += self.lazy[i]
+        self.lazy[i] = 0
+        return self._query(i * 2, ql, qr, tl, (tl + tr) // 2) + self._query(
+            i * 2 + 1, ql, qr, (tl + tr) // 2 + 1, tr
         )
 
-    def query(self, start: int, end: int) -> int:
-        if start < 0 or end > n - 1 or start > end:
-            print("Invalid Input")
-            return -1
+    def update(self, left, right, add):
+        self._update(1, left, right, add, 0, len(self.data) - 1)
 
-        return self.queryUtil(0, self.n - 1, start, end, 0)
+    def query(self, left, right):
+        return self._query(1, left, right, 0, len(self.data) - 1)
 
 
-# Driver Code
-if __name__ == "__main__":
-    arr = [1, 3, 5, 7, 9, 11]
-    n = len(arr)
-
-    segTree = LazySegTree(n)
-
-    for i in range(n):
-        segTree.update(start=i, end=i, diff=arr[i])
-
-    # Print sum of values in array from index 1 to 3
-    print("Sum of values in given range =", segTree.query(start=1, end=3))  # Expect 15
-
-    # Add 10 to all nodes at indexes from 1 to 5.
-    segTree.update(start=1, end=5, diff=10)
-
-    # Find sum after the value is updated
-    print(
-        "Updated sum of values in given range =", segTree.query(start=1, end=3)
-    )  # Expect 45
+segTree = LazySegTree([1, 0, 1, 0])
+print(segTree.query(0, 1))  # Expect 1
+print(segTree.query(0, 2))  # Expect 2
+segTree.update(0, 2, 3)
+print(segTree.query(0, 3))  # Expect 11
