@@ -1,33 +1,45 @@
-mod = int(1e9 + 7)
-nax = int(2e5 + 10)
+MOD = 10**9 + 7
+
+MAXN = 10**6
+
+fac = [0] * (MAXN + 1)
+inv = [0] * (MAXN + 1)
 
 
-def mul(a: int, b: int) -> int:
-    return (a * b) % mod
+def exp(x: int, n: int, m: int) -> int:
+    """Computes x^n modulo m in O(log p) time."""
+    x %= m  # note: m * m must be less than 2^63 to avoid ll overflow
+    res = 1
+    while n > 0:
+        if n % 2 == 1:
+            res = (res * x) % m
+        x = (x * x) % m
+        n //= 2
+    return res
 
 
-def pow(a: int, b: int) -> int:
-    if b == 0:
-        return 1
-    if b % 2 == 1:
-        return mul(a, pow(a, b - 1))
-    else:
-        c = pow(a, b // 2)
-        return mul(c, c)
+def factorial(p: int):
+    """Precomputes n! from 0 to MAXN."""
+    global fac
+    fac[0] = 1
+    for i in range(1, MAXN + 1):
+        fac[i] = (fac[i - 1] * i) % p
 
 
-def inv(x: int) -> int:
-    return pow(x, mod - 2)
+def inverses(p: int):
+    """
+    Precomputes all modular inverse factorials from 0 to MAXN in O(n + log p) time
+    """
+    global inv
+    inv[MAXN] = exp(fac[MAXN], p - 2, p)
+    for i in range(MAXN, 0, -1):
+        inv[i - 1] = (inv[i] * i) % p
 
 
-fac = [1] * (nax + 1)
-for i in range(1, nax):
-    fac[i] = mul(fac[i - 1], i)
+def choose(n: int, r: int, p=MOD):
+    """Computes nCr mod p"""
+    return fac[n] * inv[r] % p * inv[n - r] % p
 
 
-def nPr(n: int, r: int) -> int:
-    return mul(fac[n], inv(fac[n - r]))
-
-
-def nCr(n: int, r: int) -> int:
-    return mul(nPr(n, r), inv(fac[r]))
+factorial(MOD)
+inverses(MOD)
