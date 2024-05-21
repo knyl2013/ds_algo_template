@@ -55,67 +55,7 @@ public class cf104468h_2 {
   final long biginf = (long) 1e18 + 7;
   final long mod = (long) 1e9 + 7;
 
-  int N, Q;
-  int[] A, C;
-  long[][] queries;
-  Map<Integer, List<Long>> mapPrefix;
-  Map<Integer, Long> mapDeltas;
-  long base;
-
   void solve() throws Exception {
-    mapPrefix = new HashMap<>();
-    mapDeltas = new HashMap<>();
-    N = ni();
-    A = new int[N];
-    C = new int[N];
-    base = 0;
-    for (int i = 0; i < N; i++) {
-      A[i] = ni();
-    }
-    for (int i = 0; i < N; i++) {
-      C[i] = ni();
-    }
-    Q = ni();
-    queries = new long[Q][3];
-    for (int i = 0; i < Q; i++) {
-      for (int j = 0; j < 3; j++) {
-        queries[i][j] = nl();
-      }
-    }
-    for (int i = 0; i < N; i++) {
-      List<Long> prefix = mapPrefix.getOrDefault(C[i], new ArrayList<>());
-      long val = A[i];
-      if (!prefix.isEmpty()) {
-        val += prefix.get(prefix.size() - 1);
-      }
-      prefix.add(val);
-      mapPrefix.put(C[i], prefix);
-    }
-    for (int i = 0; i < Q; i++) {
-      int type = (int) queries[i][0], col = (int) queries[i][1];
-      if (type == 1) {
-        long x = queries[i][2];
-        base += x;
-        mapDeltas.put(col, mapDeltas.getOrDefault(col, 0L) - x);
-      } else { // type == 2
-        long y = queries[i][2];
-        int res = 0;
-        List<Long> prefix = mapPrefix.get(col);
-        long delta = base + mapDeltas.getOrDefault(col, 0L);
-        int lo = 0, hi = prefix.size() - 1;
-        while (lo <= hi) {
-          int mid = lo + (hi - lo) / 2;
-          long sum = prefix.get(mid) + (mid + 1) * delta;
-          if (sum <= y) {
-            res = mid + 1;
-            lo = mid + 1;
-          } else {
-            hi = mid - 1;
-          }
-        }
-        System.out.println(res);
-      }
-    }
   }
 
   long pow(long a, long b) {
