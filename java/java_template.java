@@ -5,7 +5,7 @@ public class java_template {
   void solve() {
 
   }
-  /* Just I/O Template from here til the end */
+  /* Just I/O Template from here until the end */
   static boolean multiple = false;
   static String task = "";
   static Kattio io;
