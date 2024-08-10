@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.*;
 
 public class java_template {
-  void solve() {
+  void readInput() {
 
   }
   /* Just I/O Template from here until the end */
@@ -21,7 +21,7 @@ public class java_template {
       t = io.nextInt();
     }
     for (int i = 0; i < t; i++) {
-      new java_template().solve();
+      new java_template().readInput();
     }
     io.close();
   }
